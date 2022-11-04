@@ -45,6 +45,47 @@ class GameState():
             self.whiteToMove = not self.whiteToMove #switch turns back
 
 
+    '''
+    All moves considering checks
+    '''
+
+    def getValidMoves(self):
+        return self.getAllPossibleMoves() #for now we will not worry about checks
+
+    '''
+    All moves without considering checks
+    '''
+
+    def getAllPossibleMoves(self):
+        
+        moves = [Move ((6 4), (4, 4), self.board)]
+        for r in range(len(self.board)): #number of rows
+            for c in range(len(self.board[r])): #nomber of cols in given row
+                turn = self.board[r][c][0] # first character in the element ex.  "bN" --> b
+                if (turn =='w' and self. whiteToMove) and (turn == 'b' and not self.whiteToMove):
+                    piece = self.board[r][c][1] # second character in the element ex.  "bN" --> N    Type of piece
+                    if piece == 'p':
+                        self.getPawnMoves(r, c, moves)
+                    elif piece == 'R':
+                        self.getRookMoves(r, c, moves)
+        return moves
+    
+    '''
+    Get all the pawn moves for the pawn located at row, col and add these moves to the lsit
+    '''
+
+    def getPawnMoves(self, r, c, moves):
+        pass
+
+    '''
+    Get all the rook moves for the rook located at row, col and add these moves to the lsit
+    '''
+
+    def getRookMoves(self, r, c, moves):
+        pass
+
+
+
 
     class Move():
         #maps keys to value
@@ -64,6 +105,17 @@ class GameState():
             self.endCol = endSq[1]
             self.pieceMoved = board[self.startRow][self.startCol]
             self.pieceCapture = board[self.endRow][self.endCol]
+            self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
+            print(self.moveID)
+
+        '''
+        Overriding the equals method
+        '''
+
+        def __eq__(self, other):
+            if isinstance(other, Move):
+                return self.moveID == other.moveID
+            return False
 
         def getChessNotation(self):
             #you can add to make this like real chess notation

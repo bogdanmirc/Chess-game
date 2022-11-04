@@ -9,7 +9,7 @@ import ChessEngine
 
 WIDTH = HEIGHT = 512 #400 IS ANOTHER OPTION
 DIMENSION = 8#dimensions of a chess board are 8x8
-SQ_SIZE = HEIGHT // DIMENSION
+SQ_SIZE = HEIGHT // DIMENSION # 64 - the width of the square
 MAX_FPS = 15
 IMAGES= {}
 
@@ -44,10 +44,15 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color('white'))
     gs = ChessEngine.GameState()
+    validMoves = gs.getValidMoves() # if moveMade is true then validMoves will generate the new moves in the current game situation
+    moveMade = False #flag variable for when a move is made
+
     loadImages() #only do this once, before the while loop
     running = True
     sqSelected = () #no square is selected, keep track of the last click of the user (tuple: (row, col))
     playerClicks = [] # keep track of the player clicks (two tuples: [(6,5),(4, 4)])
+
+
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
@@ -66,13 +71,21 @@ def main():
                 if len(playerClicks) == 2: #after 2nd click
                     move = ChessEngine.GameState.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+                    if move in validMoves:
+                        gs.makeMove(move)
+                        moveMade = True
                     sqSelected = () #reset user clicks
                     playerClicks = []
             #key handler
             elif e.type == p.KEYDOWN:
                 if e.key == p.K_z: #undo when 'z' is pressed
                     gs.undoMove()
+                    moveMade = True
+
+        if moveMade:
+            validMoves = gs.getValidMoves()
+            moveMade = False
+
 
 
                
