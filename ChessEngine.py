@@ -89,9 +89,19 @@ class GameState():
                 if self.board[r-1][c+1][0] == 'b': #enemy piece to capture
                     moves.append(Move((r, c), (r-1, c+1), self.board))
 
-            else: #black pawn moves
-                pass
-
+        else:  # black pawn moves
+            if self.board[r+1][c] == "--":
+                moves.append(Move((r, c), (r+1, c), self.board))
+                if r == 1 and self.board[r+2][c] == "--":
+                    moves.append(Move((r,c), (r+2, c), self.board))
+            if c-1 >=0:
+                if self.board[r+1][c-1][0] == 'w':
+                    moves.append(Move((r, c), (r+1, c-1), self.board))
+            if c+1<=7:
+                if self.board[r+1][c+1][0] == 'w':
+                    moves.append(Move((r, c), (r+1, c+1), self.board))
+        
+        #add pawn promotions later
 
     '''
     Get all the rook moves for the rook located at row, col and add these moves to the lsit
