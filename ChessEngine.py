@@ -14,7 +14,7 @@ class GameState():
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR",],
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp",],
             ["--", "--", "--", "--", "--", "--", "--", "--",],
-            ["--", "bR", "--", "--", "--", "--", "--", "--",],
+            ["--", "--", "--", "--", "--", "--", "--", "--",],
             ["--", "--", "--", "--", "--", "--", "--", "--",],
             ["--", "--", "--", "--", "--", "--", "--", "--",],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp",],
@@ -24,6 +24,8 @@ class GameState():
         
         self.whiteToMove = True
         self.moveLog = []
+        self.whiteKingLocation = (7, 4)
+        self.blackKingLocation = (0, 4)
         
         
     '''
@@ -35,6 +37,11 @@ class GameState():
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.moveLog.append(move) #log the move so we can undo it later
         self.whiteToMove = not self.whiteToMove #swap players
+        #update the king's location if moved
+        if move.pieceMoved == 'wk':
+            self.whiteKingLocation = (move.startRow, move.startCol)
+        elif move.pieceMoved == "bk":
+            self.blackKingLocation = (move.startRow, move.startCol)
     
     '''
     Undo the last move made
@@ -46,6 +53,12 @@ class GameState():
             self.board[move.startRow][move.startCol]= move.pieceMoved
             self.board[move.endRow][move.endCol] = move.pieceCapture
             self.whiteToMove = not self.whiteToMove #switch turns back
+            #update the king's position if needed
+            if move.pieceMoved == 'wk':
+                self.whiteKingLocation = (move.startRow, move.startCol)
+            elif move.pieceMoved == "bk":
+                self.blackKingLocation = (move.startRow, move.startCol)
+
 
 
     '''
@@ -253,7 +266,7 @@ class Move():
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCapture = board[self.endRow][self.endCol]
         self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
-        print(self.moveID)
+        
 
     '''
     Overriding the equals method
