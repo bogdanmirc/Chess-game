@@ -5,13 +5,12 @@ This is our main driver file. It will be responsible for handling input and disp
 import pygame as p
 import ChessEngine
 
-
-
 WIDTH = HEIGHT = 512 #400 IS ANOTHER OPTION
 DIMENSION = 8#dimensions of a chess board are 8x8
 SQ_SIZE = HEIGHT // DIMENSION # 64 - the width of the square
 MAX_FPS = 15
 IMAGES= {}
+
 
 
 
@@ -46,6 +45,7 @@ def main():
     gs = ChessEngine.GameState()
     validMoves = gs.getValidMoves() # if moveMade is true then validMoves will generate the new moves in the current game situation
     moveMade = False #flag variable for when a move is made
+    
 
     loadImages() #only do this once, before the while loop
     running = True
@@ -69,7 +69,7 @@ def main():
                     sqSelected=(row,col)
                     playerClicks.append(sqSelected) #append for both 1st and 2nd click
                 if len(playerClicks) == 2: #after 2nd click
-                    move = ChessEngine.GameState.Move(playerClicks[0], playerClicks[1], gs.board)
+                    move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
                     if move in validMoves:
                         gs.makeMove(move)
